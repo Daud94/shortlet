@@ -143,4 +143,21 @@ export class RestCountriesService {
     );
     return result.data;
   }
+
+  async getListOfCountryCodes(codes: string | string[]) {
+    let query;
+    if (typeof codes === 'string') {
+      query = codes;
+    } else {
+      query = codes.join(',');
+    }
+    const result: any = await firstValueFrom(
+      this.httpService.get(`${this.REST_COUNTRIES}alpha?codes=${query}`).pipe(
+        catchError((error: AxiosError) => {
+          throw new InternalServerErrorException(error.response.data);
+        }),
+      ),
+    );
+    return result.data;
+  }
 }
